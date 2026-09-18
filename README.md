@@ -118,7 +118,7 @@ This separates raw data ingestion, data-quality processing, analytical modeling,
 
 
 
-## 🧹 **SQL Server Data Pipeline & Modeling
+## 🧹 SQL Server Data Pipeline & Modeling
 
 
 
@@ -150,7 +150,7 @@ The original Olist CSV files were loaded into SQL Server staging tables while pr
 
 
 
-## 🧹 **Data Quality & Cleansing
+## 🧹 Data Quality & Cleansing
 
 The staging data was profiled and validated before being used to build the analytical model.
 
