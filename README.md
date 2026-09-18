@@ -30,31 +30,23 @@ The main objective of this project is to transform raw e-commerce data into a re
 
 -	How are orders distributed across payment methods?
 
-&#x20;
 
-**## 🛠️ Tools & Technologies**
+## 🛠️ Tools & Technologies
 
 
 
 | Tool / Technology | Purpose |
-
 |---|---|
-
 | Microsoft SQL Server | Data ingestion, cleansing, transformation, modeling and analysis |
-
 | SQL | Data validation, business analysis and analytical queries |
-
 | Power BI | Interactive dashboards and business reporting |
-
 | DAX | Power BI measures and analytical calculations |
-
 | Power Query | Data preparation within Power BI |
-
 | GitHub | Version control and project documentation |
 
 
 
-**## 🗂️ Dataset**
+## 🗂️ Dataset
 
 
 
@@ -86,7 +78,7 @@ The original CSV data was preserved in the SQL Server staging layer to maintain 
 
 
 
-**## 🔄 Data Architecture**
+## 🔄 Data Architecture
 
 The project follows an end-to-end analytical pipeline:
 
@@ -96,27 +88,27 @@ The project follows an end-to-end analytical pipeline:
 
 Olist CSV Files
 
-&#x20;      ↓
+      ↓
 
 Raw / Staging Tables
 
-&#x20;      ↓
+      ↓
 
 Data Quality Checks & Cleansing
 
-&#x20;      ↓
+      ↓
 
 Dimensional Model
 
-&#x20;      ↓
+      ↓
 
 Semantic Layer Views
 
-&#x20;      ↓
+      ↓
 
 Power BI
 
-&#x20;      ↓
+      ↓
 
 Interactive Business Reporting
 
@@ -126,7 +118,7 @@ This separates raw data ingestion, data-quality processing, analytical modeling,
 
 
 
-**##** 🧹 **SQL Server Data Pipeline & Modeling**
+## 🧹 **SQL Server Data Pipeline & Modeling
 
 
 
@@ -158,7 +150,7 @@ The original Olist CSV files were loaded into SQL Server staging tables while pr
 
 
 
-**##** 🧹 **Data Quality & Cleansing**
+## 🧹 **Data Quality & Cleansing
 
 The staging data was profiled and validated before being used to build the analytical model.
 
@@ -190,7 +182,7 @@ A dedicated geography-cleaning process was used to standardize geographic inform
 
 
 
-**## 🏗️ Dimensional Model**
+## 🏗️ Dimensional Model
 
 
 
@@ -203,11 +195,8 @@ The validated data was transformed into a dimensional model consisting of **2 fa
 
 
 | Table | Grain | Purpose |
-
 |---|---|---|
-
 | `Fact_Sales` | One row per order item | Sales and delivery analysis |
-
 | `Fact_Payments` | One row per payment transaction | Payment analysis |
 
 
@@ -217,19 +206,12 @@ The validated data was transformed into a dimensional model consisting of **2 fa
 
 
 | Table | Purpose |
-
 |---|---|
-
 | `Dim_Customer` | Customer and geographic analysis |
-
 | `Dim_Geography` | Standardized geographic information |
-
 | `dim_product_category` | Product categories and English translations |
-
 | `Dim_Products` | Product attributes and categories |
-
 | `Dim_Seller` | Seller and geographic analysis |
-
 | `DimDate` | Time-based analysis |
 
 
@@ -244,22 +226,17 @@ The validated data was transformed into a dimensional model consisting of **2 fa
 
 
 
-**## 🧩 Semantic Layer**
+## 🧩 Semantic Layer
 
 Business-friendly SQL Server views were created on top of the dimensional model to simplify Power BI reporting and ad-hoc analysis.
 
 
 
 | View | Purpose |
-
 |---|---|
-
 | `VW_Sales_Analysis` | Detailed sales, customer, seller, product, geography and delivery analysis |
-
 | `VW_Product_Performance` | Product-category performance, revenue, orders and delivery metrics |
-
 | `view_Sales_KPI` | High-level sales KPIs |
-
 | `VW_Product_Sales` | Product-level sales performance by category and purchase period |
 
 
@@ -268,7 +245,7 @@ The semantic layer provides a consistent analytical interface between the SQL Se
 
 
 
-**## 📊 Power BI Dashboard**
+## 📊 Power BI Dashboard
 
 The SQL Server semantic layer was connected to Power BI to create an interactive three-page analytical report.
 
@@ -352,7 +329,7 @@ Focuses on customer value, repeat purchasing behavior and payment activity.
 
 
 
-**## 🔑 Key Business Insights**
+## 🔑 Key Business Insights
 
 The analysis identified several business patterns across sales, products, customers and geography.
 
@@ -418,7 +395,7 @@ This section will be updated with the quantified findings from the SQL analysis 
 
 
 
-**## 📁 Repository Structure**
+## 📁 Repository Structure
 
 
 
@@ -427,62 +404,37 @@ This section will be updated with the quantified findings from the SQL analysis 
 olist-ecommerce-data-analytics/
 
 │
-
 ├── README.md
-
 │
-
 ├── data/
-
 │   └── README.md
-
 │
-
 ├── sql/
-
 │   ├── 01_staging_tables.sql
-
 │   ├── 02_data_quality_checks.sql
-
 │   ├── 03_dimensions.sql
-
 │   ├── 04_facts.sql
-
 │   └── 05_semantic_layer_views.sql
-
 │
-
 ├── powerbi/
-
 │   └── OLIST_SALES_REPORT.pbix
-
 │
-
 ├── screenshots/
-
 │   ├── sql_server_data_model.png
-
 │   ├── powerbi-executive-summary.png
-
 │   ├── powerbi-product-analysis.png
-
 │   ├── powerbi-customer-analysis.png
-
 │   └── powerbi-data-model.png
-
 │
-
 └── documentation/
+   ├── data_model.md
+   └── data_quality.md
 
-&#x20;   ├── data_model.md
-
-&#x20;   └── data_quality.md
-
-**```**
+```
 
 
 
-**## 🚀 Project Workflow**
+## 🚀 Project Workflow
 
 The complete analytical workflow is:
 
@@ -492,35 +444,35 @@ The complete analytical workflow is:
 
 1. Load Olist CSV files into SQL Server
 
-&#x20;                        ↓
+                        ↓
 
 2. Preserve source data in staging tables
 
-&#x20;                        ↓
+                        ↓
 
 3. Perform data-quality checks and cleansing
 
-&#x20;                        ↓
+                        ↓
 
 4. Build dimensional model
 
-&#x20;                        ↓
+                        ↓
 
 5. Create semantic-layer views
 
-&#x20;                        ↓
+                        ↓
 
 6. Perform SQL business analysis
 
-&#x20;                        ↓
+                        ↓
 
 7. Connect SQL Server views to Power BI
 
-&#x20;                        ↓
+                        ↓
 
 8. Build interactive Power BI dashboards
 
-&#x20;                        ↓
+                        ↓
 
 9. Extract business insights
 
@@ -528,7 +480,7 @@ The complete analytical workflow is:
 
 
 
-**## 📌 Project Outcome**
+## 📌 Project Outcome
 
 
 
@@ -556,7 +508,7 @@ The final solution transforms raw e-commerce data into a structured analytical m
 
 
 
-**## 👤 Author**
+## 👤 Author
 
 
 
