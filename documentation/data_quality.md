@@ -83,14 +83,9 @@ These variations were primarily caused by:
 
 ### Example
 
-
-
 | ZIP Code | City | State |
-
 |---|---|---|
-
 | 69919 | rio bracnco | AC |
-
 | 69919 | rio branco | AC |
 
 
@@ -161,8 +156,6 @@ Some ZIP code and city combinations were associated with multiple states in the 
 
 ### Example
 
-
-
 | ZIP Code | City | State |
 |---|---|---|
 | 21550 | rio de janeiro | RJ |
@@ -206,9 +199,7 @@ HAVING COUNT(DISTINCT geolocation_state) > 1;
 A frequency-based ranking approach was applied.
 
 
-
 For each ZIP code and city combination:
-
 
 
 - The state occurring most frequently in the source data was retained.
@@ -220,21 +211,15 @@ For each ZIP code and city combination:
 This provided a deterministic method for resolving conflicting geography assignments while preserving the original source data.
 
 
-
 ## 3. Missing Geography Reference Records
-
 
 
 ### Issue
 
-
-
 A comparison between the customer data and the geolocation reference identified ZIP code prefixes that were present in the customer dataset but absent from the geolocation dataset.
 
 
-
 ### Validation
-
 
 
 ```sql
@@ -242,31 +227,21 @@ A comparison between the customer data and the geolocation reference identified 
 SELECT DISTINCT customer_zip_code_prefix
 FROM dbo.raw_customers
  
-
 EXCEPT
-
  
 SELECT DISTINCT geolocation_zip_code_prefix
 FROM dbo.raw_geolocation;
 
 ```
 
-
-
 ### Findings
-
-
 
 A total of **157 customer ZIP code prefixes** were not available in the geolocation reference dataset.
 
 
-
 ### Resolution
 
-
-
 The missing geography records were incorporated into the Geography dimension using the available customer attributes:
-
 
 
 - Customer ZIP code prefix
@@ -275,60 +250,37 @@ The missing geography records were incorporated into the Geography dimension usi
 
 - State
 
-
-
 The original geolocation source data remained unchanged.
-
-
 
 ## 4. Seller Geography Validation
 
 
-
 ### Issue
-
-
 
 Some seller records failed to map to the Geography dimension because of inconsistencies between seller geography attributes and the standardized geography reference.
 
-
-
 ### Resolution
 
-
-
 Seller records were mapped to the Geography dimension using a combination of:
-
 
 
 - ZIP code prefix
 
 - State
 
-
-
 This combination proved more reliable than city names because city names contained spelling inconsistencies in the source data.
-
 
 
 Any records that could not be mapped were assigned to an **Unknown Geography** member.
 
-
-
 This approach maintains referential integrity while ensuring that unmatched seller records remain available for analysis.
-
 
 
 ## 5. Clean Geography Staging Layer
 
-
-
 To avoid modifying the original source data, a dedicated cleaned geography staging layer was introduced.
 
-
-
 The cleansing process followed the sequence below:
-
 
 
 1. Load raw geolocation data into the staging area.
@@ -344,41 +296,27 @@ The cleansing process followed the sequence below:
 6. Load Customer and Seller dimensions by referencing the Geography dimension.
 
 
-
 This approach preserves the integrity of the original source data while ensuring that the dimensional model is built on standardized and validated geography information.
-
 
 
 ## 6. Handling Missing Product Category Names
 
 
-
 ### Issue
-
 
 
 The product dataset contained NULL or blank values in the `product_category_name` attribute.
 
-
-
 Product category is an important descriptive attribute used for product-level analysis and reporting, so missing category values needed to be handled before loading the `Dim_Product` dimension.
-
-
 
 Additionally, the product category translation reference did not contain English translations for every Portuguese category available in the product source data.
 
 
-
 ### Resolution
-
-
 
 A default category value of `UNDEFINED` was assigned when product category information was missing or unavailable.
 
-
-
 The cleansing logic included:
-
 
 
 - Replacing NULL or blank Portuguese category names with `UNDEFINED`.
@@ -393,14 +331,9 @@ The cleansing logic included:
 
 ## 7. NULL and Duplicate Key Checks
 
-
-
 NULL and duplicate-value checks were performed on key columns across the staging datasets.
 
-
-
 The purpose of these checks was to identify:
-
 
 
 - Missing key values
@@ -412,29 +345,19 @@ The purpose of these checks was to identify:
 - Records that could affect referential integrity
 
 
-
 These checks were performed before loading the dimensional model.
-
 
 
 ## 8. Product Category Availability for Orders
 
-
-
 ### Objective
 
-
-
 The relationship between orders, order items, products, and product categories was validated to identify orders for which product category information was unavailable.
-
-
 
 ### Findings
 
 
-
 The analysis identified:
-
 
 
 - **610 products** for which product category information was not defined.
@@ -445,38 +368,24 @@ The analysis identified:
 
 ### Resolution
 
-
-
 Missing product categories were handled using the `UNDEFINED` category described in Section 6.
-
-
 
 This allows affected records to remain in the analytical model while maintaining a consistent dimension value rather than introducing NULL category members.
 
-
-
 ## 9. Order and Order-Item Relationship
-
 
 
 ### Objective
 
 
-
 The relationship between orders and order items was validated to identify orders without corresponding order-item detail.
-
 
 
 ### Findings
 
-
-
 Only **one order** was identified without corresponding order-item detail.
 
-
-
 The majority of orders associated with missing order-item information belonged to statuses such as:
-
 
 
 - `unavailable`
@@ -484,38 +393,22 @@ The majority of orders associated with missing order-item information belonged t
 - `canceled`
 
 
-
 ### Analysis
-
 
 
 The absence of order-item records is therefore largely consistent with the business process for orders that were unavailable or canceled.
 
-
-
 The remaining exception was identified for further review rather than being automatically removed from the dataset.
-
-
 
 ## 10. Payment and Order-Item Reconciliation
 
-
-
 ### Objective
-
-
 
 The payment and order-item datasets were reconciled at the `order_id` level to identify potential inconsistencies between recorded payment amounts and corresponding order-item values.
 
-
-
 ### Validation Logic
 
-
-
 For each order, the Order Amount was calculated as:
-
-
 
 ```text
 
@@ -523,38 +416,22 @@ SUM(price + freight_value)
 
 ```
 
-
 from the order-item data.
 
-
-
 The Paid Amount was calculated as:
-
-
 
 ```text
 
 SUM(payment_value)
 
 ```
-
-
-
 from the payment data.
-
-
 
 The two amounts were then compared at the `order_id` level.
 
-
-
 A tolerance of `0.01` was applied to account for minor rounding differences.
 
-
-
 ### SQL Validation
-
-
 
 ```sql
 
@@ -563,119 +440,64 @@ WITH OrderAmount AS
 (
 
    SELECT
-
        order_id,
-
        SUM(price + freight_value) AS OrderAmount
-
    FROM dbo.Raw_Order_Items
-
    GROUP BY order_id
-
 ),
-
 PaymentAmount AS
-
 (
-
    SELECT
-
        order_id,
-
        SUM(payment_value) AS PaidAmount
-
    FROM dbo.Raw_Order_Payments
-
    GROUP BY order_id
-
 )
-
 SELECT
-
    oa.order_id,
-
    oa.OrderAmount,
-
    pa.PaidAmount,
-
    oa.OrderAmount - pa.PaidAmount AS Difference
-
 FROM OrderAmount oa
-
 LEFT JOIN PaymentAmount pa
-
    ON oa.order_id = pa.order_id
-
 WHERE ABS(oa.OrderAmount - pa.PaidAmount) > 0.01
-
 ORDER BY Difference DESC;
 
 ```
-
-
-
 ### Findings
-
-
 
 Out of **99,400 orders**, **303 orders** showed a difference greater than the `0.01` tolerance.
 
-
-
 This represents approximately **0.3% of orders**.
-
-
 
 ### Analysis
 
-
-
 The reconciliation indicates a high level of consistency between the payment and order-item datasets, with only a small proportion of orders showing a difference greater than the defined tolerance.
-
-
 
 The identified exceptions were retained rather than modifying the original source values.
 
-
-
 ## 11. Order Customer and Seller Validation
-
-
 
 ### Objective
 
-
 The order data was validated to ensure that orders could be associated with valid customer and seller identifiers.
 
-
-
 The following relationships were reviewed:
-
-
 
 - `Order → Customer`
 
 - `Order Item → Seller`
 
-
-
 The checks were used to identify potential orphan records and ensure that the dimensional model could maintain appropriate referential relationships between orders, customers, and sellers.
-
-
 
 Records requiring special handling were reviewed before loading the fact tables.
 
-
-
 ## Data Quality Summary
-
-
 
 The data quality assessment focused on the following areas:
 
-
-
-| Area | Validation / Cleansing |
+|Area | Validation / Cleansing |
 |---|---|
 | Geography | City-name standardization and conflicting state resolution |
 | Completeness | NULL, missing geography and missing product-category checks |
@@ -688,8 +510,6 @@ The data quality assessment focused on the following areas:
 
 
 The overall approach was designed to preserve the original source data while creating validated and standardized data for analytical modeling.
-
-
 
 The cleaned staging layer provided the foundation for the subsequent fact and dimension tables and the semantic layer consumed by Power BI.
 
