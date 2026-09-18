@@ -1,0 +1,16 @@
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+
+# SQL Server local files
+*.bak
+
+# Power BI temporary/backup files
+~$*.pbix
+
+# Local configuration
+.env
