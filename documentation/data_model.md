@@ -1,56 +1,48 @@
-**# Data Model**
-
-
+# Data Model
 
 The validated and cleansed staging data was transformed into a dimensional model designed to support analytical reporting and Power BI.
-
-
 
 The dimensional model separates transactional business events into fact tables and descriptive business attributes into dimension tables. This structure provides a reusable analytical foundation for reporting and ad-hoc analysis.
 
 
 
-**## Model Architecture**
-
+## Model Architecture
 
 
 The overall data flow is:
-
 
 
 ```text
 
 Olist CSV Files
 
-&#x20;      ↓
+      ↓
 
 SQL Server Staging Tables
 
-&#x20;      ↓
+      ↓
 
-Data Quality \& Cleansing
+Data Quality & Cleansing
 
-&#x20;      ↓
+      ↓
 
-Fact \& Dimension Tables
+Fact & Dimension Tables
 
-&#x20;      ↓
+      ↓
 
 Semantic Layer Views
 
-&#x20;      ↓
+      ↓
 
 Power BI
 
 ```
 
 
-
-**## Fact Tables**
-
+## Fact Tables
 
 
-\### 1. `Fact\_Sales`
+### 1. `Fact_Sales`
 
 
 
@@ -62,23 +54,23 @@ Key analytical measures include:
 
 
 
-\- Order amount
+- Order amount
 
-\- Item price
+- Item price
 
-\- Freight value
+- Freight value
 
-\- Sales-related metrics
+- Sales-related metrics
 
-\- Delivery measures
+- Delivery measures
 
-\- Delivery days
+- Delivery days
 
-\- Delivery delay days
+- Delivery delay days
 
 
 
-\### 2. `Fact\_Payments`
+### 2. `Fact_Payments`
 
 
 
@@ -90,17 +82,17 @@ Key analytical measures include:
 
 
 
-\- Payment value
+- Payment value
 
-\- Payment installments
-
-
-
-**## Dimension Tables**
+- Payment installments
 
 
 
-\### 1. `Dim\_Customer`
+## Dimension Tables
+
+
+
+### 1. `Dim_Customer`
 
 
 
@@ -108,7 +100,7 @@ Contains descriptive information about customers and supports customer-level ana
 
 
 
-\### 2. `Dim\_Product`
+### 2. `Dim_Product`
 
 
 
@@ -116,7 +108,7 @@ Contains product attributes, including product category information, and support
 
 
 
-\### 3. `Dim\_Seller`
+### 3. `Dim_Seller`
 
 
 
@@ -124,7 +116,7 @@ Contains seller-related attributes and supports seller performance analysis.
 
 
 
-\### 4. `Dim\_Geography`
+### 4. `Dim_Geography`
 
 
 
@@ -136,7 +128,7 @@ Geographic data was standardized during the staging process to address city-name
 
 
 
-\### 5. `Dim\_Date`
+### 5. `Dim_Date`
 
 
 
@@ -148,7 +140,7 @@ The date dimension supports analysis of sales, orders, and other business events
 
 
 
-**## Modeling Approach**
+## Modeling Approach
 
 
 
@@ -164,15 +156,15 @@ The model supports analysis across the following dimensions:
 
 
 
-\- Customer
+- Customer
 
-\- Product
+- Product
 
-\- Seller
+- Seller
 
-\- Geography
+- Geography
 
-\- Date
+- Date
 
 
 
@@ -180,7 +172,7 @@ This structure allows business metrics to be analyzed across multiple dimensions
 
 
 
-**## Data Quality Integration**
+## Data Quality Integration
 
 
 
@@ -192,21 +184,21 @@ Examples of data quality handling incorporated into the model include:
 
 
 
-\- City-name standardization
+- City-name standardization
 
-\- Conflicting ZIP code and state resolution
+- Conflicting ZIP code and state resolution
 
-\- Missing geography handling
+- Missing geography handling
 
-\- Missing product-category handling
+- Missing product-category handling
 
-\- `UNDEFINED` product categories
+- `UNDEFINED` product categories
 
-\- Unknown Geography members
+- Unknown Geography members
 
-\- Key and duplicate validation
+- Key and duplicate validation
 
-\- Referential integrity checks
+- Referential integrity checks
 
 
 
@@ -214,7 +206,7 @@ These controls help maintain consistency between fact and dimension tables.
 
 
 
-**## Data Model Diagram**
+## Data Model Diagram
 
 
 
@@ -222,11 +214,11 @@ The following diagram provides a visual representation of the dimensional model 
 
 
 
-!\[SQL Server Data Model](../screenshots/sql\_server\_data\_model.png)
+![SQL Server Data Model](../screenshots/sql_server_data_model.png)
 
 
 
-**## Semantic Layer**
+## Semantic Layer
 
 
 
@@ -240,21 +232,20 @@ The semantic layer abstracts underlying table and join complexity and provides a
 
 ```text
 
-Fact \& Dimension Tables
+Fact & Dimension Tables
 
-&#x20;         ↓
+         ↓
 
 Semantic Layer Views
 
-&#x20;         ↓
+         ↓
 
 Power BI
 
 ```
 
 
-
-**## Purpose of the Model**
+## Purpose of the Model
 
 
 
@@ -262,17 +253,17 @@ The dimensional model was designed to:
 
 
 
-\- Support efficient analytical queries
+- Support efficient analytical queries
 
-\- Provide consistent business dimensions for reporting
+- Provide consistent business dimensions for reporting
 
-\- Simplify Power BI data consumption
+- Simplify Power BI data consumption
 
-\- Enable multi-dimensional analysis
+- Enable multi-dimensional analysis
 
-\- Separate data preparation from reporting logic
+- Separate data preparation from reporting logic
 
-\- Provide a reusable foundation for future analytical requirements
+- Provide a reusable foundation for future analytical requirements
 
 
 

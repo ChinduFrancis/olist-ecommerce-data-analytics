@@ -1,8 +1,8 @@
-**# Data Quality Assessment and Cleansing**
+# Data Quality Assessment and Cleansing
 
 
 
-**## Overview**
+## Overview
 
 
 
@@ -18,7 +18,7 @@ The validated and cleansed staging data was subsequently used to populate the fa
 
 
 
-**## Data Quality Process**
+## Data Quality Process
 
 
 
@@ -26,63 +26,40 @@ The validated and cleansed staging data was subsequently used to populate the fa
 
 Olist CSV Files
 
-\&#x20;      │
-
-\&#x20;      ▼
-
+      │
+      ▼
 SQL Server Staging Tables
-
-\&#x20;      │
-
-\&#x20;      ▼
-
-Data Quality Assessment \\\& Cleansing
-
-\&#x20;      │
-
-\&#x20;      ├── Data Standardization
-
-\&#x20;      ├── Completeness Checks
-
-\&#x20;      ├── Duplicate Checks
-
-\&#x20;      ├── Referential Integrity Checks
-
-\&#x20;      └── Financial Reconciliation
-
-\&#x20;      │
-
-\&#x20;      ▼
-
+      │
+      ▼
+Data Quality Assessment & Cleansing
+      │
+      ├── Data Standardization
+      ├── Completeness Checks
+      ├── Duplicate Checks
+      ├── Referential Integrity Checks
+      └── Financial Reconciliation
+      │
+      ▼
 Clean / Validated Data
-
-\&#x20;      │
-
-\&#x20;      ▼
-
-Fact \\\& Dimension Tables
-
-\&#x20;      │
-
-\&#x20;      ▼
-
+      │
+      ▼
+Fact & Dimension Tables
+      │
+      ▼
 Semantic Layer Views
-
-\&#x20;      │
-
-\&#x20;      ▼
-
+      │
+      ▼
 Power BI
 
 ```
 
 
 
-**## 1. City Name Standardization**
+## 1. City Name Standardization
 
 
 
-\### Issue
+### Issue
 
 
 
@@ -94,17 +71,17 @@ These variations were primarily caused by:
 
 
 
-\- Spelling inconsistencies
+- Spelling inconsistencies
 
-\- Abbreviations
+- Abbreviations
 
-\- Formatting differences
+- Formatting differences
 
-\- Typographical errors
+- Typographical errors
 
 
 
-\### Example
+### Example
 
 
 
@@ -118,7 +95,7 @@ These variations were primarily caused by:
 
 
 
-\### Resolution
+### Resolution
 
 
 
@@ -130,57 +107,51 @@ For each ZIP code and state combination, city names were ranked using the follow
 
 
 
-1\. \*\*Highest occurrence frequency\*\* — the city name appearing most frequently was selected.
+1. **Highest occurrence frequency** — the city name appearing most frequently was selected.
 
-2\. \*\*Shortest city name length\*\* — used as a secondary tie-breaker when multiple names had the same frequency.
+2. **Shortest city name length** — used as a secondary tie-breaker when multiple names had the same frequency.
 
-3\. \*\*Alphabetical order\*\* — used as the final tie-breaker when frequency and length were identical.
+3. **Alphabetical order** — used as the final tie-breaker when frequency and length were identical.
 
 
 
 The highest-ranked city name was retained in the cleaned geolocation staging table:
 
 
-
-`stg\\\_geolocation\\\_clean`
-
+`stg_geolocation_clean`
 
 
-This table was subsequently used to populate the `Dim\\\_Geography` dimension.
+This table was subsequently used to populate the `Dim_Geography` dimension.
 
 
-
-\### Methodology Note
-
+### Methodology Note
 
 
 This is a heuristic, rule-based standardization technique, rather than an authoritative correction.
 
 
-
 The approach assumes that the most frequently occurring representation of a city name is the most reliable. Deterministic tie-breaking rules ensure that the ETL process produces consistent results.
-
 
 
 This approach:
 
 
 
-\- Preserves the original source data.
+- Preserves the original source data.
 
-\- Avoids maintaining a manual lookup table.
+- Avoids maintaining a manual lookup table.
 
-\- Produces consistent geography values.
+- Produces consistent geography values.
 
-\- Provides a standardized geography reference for analytical reporting.
-
-
-
-**## 2. Conflicting State for the Same ZIP Code and City**
+- Provides a standardized geography reference for analytical reporting.
 
 
 
-\### Issue
+## 2. Conflicting State for the Same ZIP Code and City
+
+
+
+### Issue
 
 
 
@@ -188,53 +159,47 @@ Some ZIP code and city combinations were associated with multiple states in the 
 
 
 
-\### Example
+### Example
 
 
 
 | ZIP Code | City | State |
-
 |---|---|---|
-
 | 21550 | rio de janeiro | RJ |
-
 | 21550 | rio de janeiro | AC |
 
 
-
-\### Validation
+### Validation
 
 
 
 The following query was used to identify ZIP code and city combinations associated with multiple states:
 
 
-
 ```sql
 
 SELECT
 
-\&#x20;   geolocation\\\_zip\\\_code\\\_prefix,
+   geolocation_zip_code_prefix,
 
-\&#x20;   geolocation\\\_city,
+   geolocation_city,
 
-\&#x20;   COUNT(DISTINCT geolocation\\\_state) AS State\\\_Count
+   COUNT(DISTINCT geolocation_state) AS State_Count
 
-FROM dbo.raw\\\_geolocation
+FROM dbo.raw_geolocation
 
 GROUP BY
 
-\&#x20;   geolocation\\\_zip\\\_code\\\_prefix,
+   geolocation_zip_code_prefix,
 
-\&#x20;   geolocation\\\_city
+   geolocation_city
 
-HAVING COUNT(DISTINCT geolocation\\\_state) > 1;
+HAVING COUNT(DISTINCT geolocation_state) > 1;
 
 ```
 
 
-
-\### Resolution
+### Resolution
 
 
 
@@ -246,9 +211,9 @@ For each ZIP code and city combination:
 
 
 
-\- The state occurring most frequently in the source data was retained.
+- The state occurring most frequently in the source data was retained.
 
-\- Lower-frequency conflicting mappings were excluded from the cleaned geography staging data.
+- Lower-frequency conflicting mappings were excluded from the cleaned geography staging data.
 
 
 
@@ -256,11 +221,11 @@ This provided a deterministic method for resolving conflicting geography assignm
 
 
 
-**## 3. Missing Geography Reference Records**
+## 3. Missing Geography Reference Records
 
 
 
-\### Issue
+### Issue
 
 
 
@@ -268,39 +233,35 @@ A comparison between the customer data and the geolocation reference identified 
 
 
 
-\### Validation
+### Validation
 
 
 
 ```sql
 
-SELECT DISTINCT customer\\\_zip\\\_code\\\_prefix
-
-FROM dbo.raw\\\_customers
-
-
+SELECT DISTINCT customer_zip_code_prefix
+FROM dbo.raw_customers
+ 
 
 EXCEPT
 
-
-
-SELECT DISTINCT geolocation\\\_zip\\\_code\\\_prefix
-
-FROM dbo.raw\\\_geolocation;
+ 
+SELECT DISTINCT geolocation_zip_code_prefix
+FROM dbo.raw_geolocation;
 
 ```
 
 
 
-\### Findings
+### Findings
 
 
 
-A total of \*\*157 customer ZIP code prefixes\*\* were not available in the geolocation reference dataset.
+A total of **157 customer ZIP code prefixes** were not available in the geolocation reference dataset.
 
 
 
-\### Resolution
+### Resolution
 
 
 
@@ -308,11 +269,11 @@ The missing geography records were incorporated into the Geography dimension usi
 
 
 
-\- Customer ZIP code prefix
+- Customer ZIP code prefix
 
-\- City
+- City
 
-\- State
+- State
 
 
 
@@ -320,11 +281,11 @@ The original geolocation source data remained unchanged.
 
 
 
-**## 4. Seller Geography Validation**
+## 4. Seller Geography Validation
 
 
 
-\### Issue
+### Issue
 
 
 
@@ -332,7 +293,7 @@ Some seller records failed to map to the Geography dimension because of inconsis
 
 
 
-\### Resolution
+### Resolution
 
 
 
@@ -340,9 +301,9 @@ Seller records were mapped to the Geography dimension using a combination of:
 
 
 
-\- ZIP code prefix
+- ZIP code prefix
 
-\- State
+- State
 
 
 
@@ -350,7 +311,7 @@ This combination proved more reliable than city names because city names contain
 
 
 
-Any records that could not be mapped were assigned to an \*\*Unknown Geography\*\* member.
+Any records that could not be mapped were assigned to an **Unknown Geography** member.
 
 
 
@@ -358,7 +319,7 @@ This approach maintains referential integrity while ensuring that unmatched sell
 
 
 
-**## 5. Clean Geography Staging Layer**
+## 5. Clean Geography Staging Layer
 
 
 
@@ -370,17 +331,17 @@ The cleansing process followed the sequence below:
 
 
 
-1\. Load raw geolocation data into the staging area.
+1. Load raw geolocation data into the staging area.
 
-2\. Identify inconsistent city names and conflicting ZIP code–city–state mappings.
+2. Identify inconsistent city names and conflicting ZIP code–city–state mappings.
 
-3\. Resolve conflicts using frequency-based ranking.
+3. Resolve conflicts using frequency-based ranking.
 
-4\. Create the cleaned geography staging table.
+4. Create the cleaned geography staging table.
 
-5\. Load the Geography dimension from the cleaned staging data.
+5. Load the Geography dimension from the cleaned staging data.
 
-6\. Load Customer and Seller dimensions by referencing the Geography dimension.
+6. Load Customer and Seller dimensions by referencing the Geography dimension.
 
 
 
@@ -388,19 +349,19 @@ This approach preserves the integrity of the original source data while ensuring
 
 
 
-**## 6. Handling Missing Product Category Names**
+## 6. Handling Missing Product Category Names
 
 
 
-\### Issue
+### Issue
 
 
 
-The product dataset contained NULL or blank values in the `product\\\_category\\\_name` attribute.
+The product dataset contained NULL or blank values in the `product_category_name` attribute.
 
 
 
-Product category is an important descriptive attribute used for product-level analysis and reporting, so missing category values needed to be handled before loading the `Dim\\\_Product` dimension.
+Product category is an important descriptive attribute used for product-level analysis and reporting, so missing category values needed to be handled before loading the `Dim_Product` dimension.
 
 
 
@@ -408,7 +369,7 @@ Additionally, the product category translation reference did not contain English
 
 
 
-\### Resolution
+### Resolution
 
 
 
@@ -420,17 +381,17 @@ The cleansing logic included:
 
 
 
-\- Replacing NULL or blank Portuguese category names with `UNDEFINED`.
+- Replacing NULL or blank Portuguese category names with `UNDEFINED`.
 
-\- Replacing missing English category translations with `UNDEFINED`.
+- Replacing missing English category translations with `UNDEFINED`.
 
-\- Preserving the original product data without modification.
+- Preserving the original product data without modification.
 
-\- Applying the cleansing logic during the dimension-loading process.
+- Applying the cleansing logic during the dimension-loading process.
 
 
 
-**## 7. NULL and Duplicate Key Checks**
+## 7. NULL and Duplicate Key Checks
 
 
 
@@ -442,13 +403,13 @@ The purpose of these checks was to identify:
 
 
 
-\- Missing key values
+- Missing key values
 
-\- Duplicate business keys
+- Duplicate business keys
 
-\- Potential primary-key violations
+- Potential primary-key violations
 
-\- Records that could affect referential integrity
+- Records that could affect referential integrity
 
 
 
@@ -456,11 +417,11 @@ These checks were performed before loading the dimensional model.
 
 
 
-**## 8. Product Category Availability for Orders**
+## 8. Product Category Availability for Orders
 
 
 
-\### Objective
+### Objective
 
 
 
@@ -468,7 +429,7 @@ The relationship between orders, order items, products, and product categories w
 
 
 
-\### Findings
+### Findings
 
 
 
@@ -476,13 +437,13 @@ The analysis identified:
 
 
 
-\- \*\*610 products\*\* for which product category information was not defined.
+- **610 products** for which product category information was not defined.
 
-\- \*\*1,451 distinct orders\*\* for which product-category information was unavailable.
+- **1,451 distinct orders** for which product-category information was unavailable.
 
 
 
-\### Resolution
+### Resolution
 
 
 
@@ -494,11 +455,11 @@ This allows affected records to remain in the analytical model while maintaining
 
 
 
-**## 9. Order and Order-Item Relationship**
+## 9. Order and Order-Item Relationship
 
 
 
-\### Objective
+### Objective
 
 
 
@@ -506,11 +467,11 @@ The relationship between orders and order items was validated to identify orders
 
 
 
-\### Findings
+### Findings
 
 
 
-Only \*\*one order\*\* was identified without corresponding order-item detail.
+Only **one order** was identified without corresponding order-item detail.
 
 
 
@@ -518,13 +479,13 @@ The majority of orders associated with missing order-item information belonged t
 
 
 
-\- `unavailable`
+- `unavailable`
 
-\- `canceled`
+- `canceled`
 
 
 
-\### Analysis
+### Analysis
 
 
 
@@ -536,19 +497,19 @@ The remaining exception was identified for further review rather than being auto
 
 
 
-**## 10. Payment and Order-Item Reconciliation**
+## 10. Payment and Order-Item Reconciliation
 
 
 
-\### Objective
+### Objective
 
 
 
-The payment and order-item datasets were reconciled at the `order\\\_id` level to identify potential inconsistencies between recorded payment amounts and corresponding order-item values.
+The payment and order-item datasets were reconciled at the `order_id` level to identify potential inconsistencies between recorded payment amounts and corresponding order-item values.
 
 
 
-\### Validation Logic
+### Validation Logic
 
 
 
@@ -558,10 +519,9 @@ For each order, the Order Amount was calculated as:
 
 ```text
 
-SUM(price + freight\\\_value)
+SUM(price + freight_value)
 
 ```
-
 
 
 from the order-item data.
@@ -574,7 +534,7 @@ The Paid Amount was calculated as:
 
 ```text
 
-SUM(payment\\\_value)
+SUM(payment_value)
 
 ```
 
@@ -584,7 +544,7 @@ from the payment data.
 
 
 
-The two amounts were then compared at the `order\\\_id` level.
+The two amounts were then compared at the `order_id` level.
 
 
 
@@ -592,7 +552,7 @@ A tolerance of `0.01` was applied to account for minor rounding differences.
 
 
 
-\### SQL Validation
+### SQL Validation
 
 
 
@@ -602,15 +562,15 @@ WITH OrderAmount AS
 
 (
 
-\&#x20;   SELECT
+   SELECT
 
-\&#x20;       order\\\_id,
+       order_id,
 
-\&#x20;       SUM(price + freight\\\_value) AS OrderAmount
+       SUM(price + freight_value) AS OrderAmount
 
-\&#x20;   FROM dbo.Raw\\\_Order\\\_Items
+   FROM dbo.Raw_Order_Items
 
-\&#x20;   GROUP BY order\\\_id
+   GROUP BY order_id
 
 ),
 
@@ -618,33 +578,33 @@ PaymentAmount AS
 
 (
 
-\&#x20;   SELECT
+   SELECT
 
-\&#x20;       order\\\_id,
+       order_id,
 
-\&#x20;       SUM(payment\\\_value) AS PaidAmount
+       SUM(payment_value) AS PaidAmount
 
-\&#x20;   FROM dbo.Raw\\\_Order\\\_Payments
+   FROM dbo.Raw_Order_Payments
 
-\&#x20;   GROUP BY order\\\_id
+   GROUP BY order_id
 
 )
 
 SELECT
 
-\&#x20;   oa.order\\\_id,
+   oa.order_id,
 
-\&#x20;   oa.OrderAmount,
+   oa.OrderAmount,
 
-\&#x20;   pa.PaidAmount,
+   pa.PaidAmount,
 
-\&#x20;   oa.OrderAmount - pa.PaidAmount AS Difference
+   oa.OrderAmount - pa.PaidAmount AS Difference
 
 FROM OrderAmount oa
 
 LEFT JOIN PaymentAmount pa
 
-\&#x20;   ON oa.order\\\_id = pa.order\\\_id
+   ON oa.order_id = pa.order_id
 
 WHERE ABS(oa.OrderAmount - pa.PaidAmount) > 0.01
 
@@ -654,19 +614,19 @@ ORDER BY Difference DESC;
 
 
 
-**### Findings**
+### Findings
 
 
 
-Out of \*\*99,400 orders\*\*, \*\*303 orders\*\* showed a difference greater than the `0.01` tolerance.
+Out of **99,400 orders**, **303 orders** showed a difference greater than the `0.01` tolerance.
 
 
 
-This represents approximately \*\*0.3% of orders\*\*.
+This represents approximately **0.3% of orders**.
 
 
 
-\### Analysis
+### Analysis
 
 
 
@@ -678,12 +638,11 @@ The identified exceptions were retained rather than modifying the original sourc
 
 
 
-\## 11. Order Customer and Seller Validation
+## 11. Order Customer and Seller Validation
 
 
 
-\### Objective
-
+### Objective
 
 
 The order data was validated to ensure that orders could be associated with valid customer and seller identifiers.
@@ -694,9 +653,9 @@ The following relationships were reviewed:
 
 
 
-\- `Order → Customer`
+- `Order → Customer`
 
-\- `Order Item → Seller`
+- `Order Item → Seller`
 
 
 
@@ -708,7 +667,7 @@ Records requiring special handling were reviewed before loading the fact tables.
 
 
 
-**## Data Quality Summary**
+## Data Quality Summary
 
 
 
@@ -717,21 +676,13 @@ The data quality assessment focused on the following areas:
 
 
 | Area | Validation / Cleansing |
-
 |---|---|
-
 | Geography | City-name standardization and conflicting state resolution |
-
 | Completeness | NULL, missing geography and missing product-category checks |
-
 | Uniqueness | Duplicate key checks |
-
 | Referential Integrity | Customer, seller, product and order-item relationships |
-
 | Financial Consistency | Payment vs. order-item reconciliation |
-
 | Standardization | Geography and product-category standardization |
-
 | Exception Handling | Unknown Geography and Undefined Product Category |
 
 
