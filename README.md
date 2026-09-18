@@ -1,4 +1,4 @@
-\# 🛒 **Olist E-Commerce Data Analysis**
+# 🛒 **Olist E-Commerce Data Analysis**
 
 An end-to-end e-commerce data analytics project using the Olist Brazilian E-Commerce dataset. The project transforms raw CSV data into a validated and structured analytical model using Microsoft SQL Server, followed by interactive business reporting and analysis in Power BI.
 
@@ -6,33 +6,33 @@ The project focuses on sales performance, product categories, customer behavior,
 
 
 
-\## 🎯 **Business Objectives**
+## 🎯 **Business Objectives**
 
 The main objective of this project is to transform raw e-commerce data into a reliable analytical solution that can support business decision-making.
 
-\### Key Business Questions
+### Key Business Questions
 
-\-	What is the overall sales and order performance?
+-	What is the overall sales and order performance?
 
-\-	Which product categories generate the most revenue and orders?
+-	Which product categories generate the most revenue and orders?
 
-\-	How is revenue distributed across Brazilian states?
+-	How is revenue distributed across Brazilian states?
 
-\-	How does revenue change over time?
+-	How does revenue change over time?
 
-\-	Which product categories have longer delivery times?
+-	Which product categories have longer delivery times?
 
-\-	How much revenue does each product category contribute?
+-	How much revenue does each product category contribute?
 
-\-	How many customers make repeat purchases?
+-	How many customers make repeat purchases?
 
-\-	Which customers generate the highest revenue?
+-	Which customers generate the highest revenue?
 
-\-	How are orders distributed across payment methods?
+-	How are orders distributed across payment methods?
 
 &#x20;
 
-**## 🛠️ Tools \& Technologies**
+**## 🛠️ Tools & Technologies**
 
 
 
@@ -60,27 +60,27 @@ The main objective of this project is to transform raw e-commerce data into a re
 
 The project uses the Olist Brazilian E-Commerce dataset, consisting of multiple related datasets covering customers, orders, products, sellers, payments, reviews and Brazilian geographic information.
 
-\### Source Data
+### Source Data
 
 The datasets used in the project include:
 
-\-	Customers
+-	Customers
 
-\-	Geolocation
+-	Geolocation
 
-\-	Orders
+-	Orders
 
-\-	Order Items
+-	Order Items
 
-\-	Order Payments
+-	Order Payments
 
-\-	Products
+-	Products
 
-\-	Sellers
+-	Sellers
 
-\-	Reviews
+-	Reviews
 
-\-	Product Category Translation
+-	Product Category Translation
 
 The original CSV data was preserved in the SQL Server staging layer to maintain traceability throughout the transformation process.
 
@@ -102,7 +102,7 @@ Raw / Staging Tables
 
 &#x20;      ↓
 
-Data Quality Checks \& Cleansing
+Data Quality Checks & Cleansing
 
 &#x20;      ↓
 
@@ -126,65 +126,65 @@ This separates raw data ingestion, data-quality processing, analytical modeling,
 
 
 
-**##** 🧹 **SQL Server Data Pipeline \& Modeling**
+**##** 🧹 **SQL Server Data Pipeline & Modeling**
 
 
 
-\### Raw / Staging Layer
+### Raw / Staging Layer
 
 The original Olist CSV files were loaded into SQL Server staging tables while preserving the source data.
 
 
 
-\### Staging Tables
+### Staging Tables
 
 
 
-\- `Raw\_Customer`
+- `Raw_Customer`
 
-\- `Raw\_Geolocation`
+- `Raw_Geolocation`
 
-\- `Raw\_Order\_Items`
+- `Raw_Order_Items`
 
-\- `Raw\_Order\_Payments`
+- `Raw_Order_Payments`
 
-\- `Raw\_Orders`
+- `Raw_Orders`
 
-\- `raw\_products`
+- `raw_products`
 
-\- `Raw\_Review`
+- `Raw_Review`
 
-\- `raw\_sellers`
+- `raw_sellers`
 
 
 
-**##** 🧹 **Data Quality \& Cleansing**
+**##** 🧹 **Data Quality & Cleansing**
 
 The staging data was profiled and validated before being used to build the analytical model.
 
 
 
-\### Key data-quality activities included:
+### Key data-quality activities included:
 
-\-	City-name standardization
+-	City-name standardization
 
-\-	ZIP code, city and state mapping validation
+-	ZIP code, city and state mapping validation
 
-\-	Missing geography reference identification
+-	Missing geography reference identification
 
-\-	Seller geography validation
+-	Seller geography validation
 
-\-	Missing product-category handling
+-	Missing product-category handling
 
-\-	NULL and duplicate checks
+-	NULL and duplicate checks
 
-\-	Customer and seller key validation
+-	Customer and seller key validation
 
-\-	Order and order-item relationship validation
+-	Order and order-item relationship validation
 
-\-	Product-category availability validation
+-	Product-category availability validation
 
-\-	Payment and order-item amount reconciliation
+-	Payment and order-item amount reconciliation
 
 A dedicated geography-cleaning process was used to standardize geographic information while keeping the original source data unchanged.
 
@@ -194,11 +194,11 @@ A dedicated geography-cleaning process was used to standardize geographic inform
 
 
 
-The validated data was transformed into a dimensional model consisting of \*\*2 fact tables and 6 dimension tables\*\*.
+The validated data was transformed into a dimensional model consisting of **2 fact tables and 6 dimension tables**.
 
 
 
-\### Fact Tables
+### Fact Tables
 
 
 
@@ -206,13 +206,13 @@ The validated data was transformed into a dimensional model consisting of \*\*2 
 
 |---|---|---|
 
-| `Fact\_Sales` | One row per order item | Sales and delivery analysis |
+| `Fact_Sales` | One row per order item | Sales and delivery analysis |
 
-| `Fact\_Payments` | One row per payment transaction | Payment analysis |
+| `Fact_Payments` | One row per payment transaction | Payment analysis |
 
 
 
-\### Dimension Tables
+### Dimension Tables
 
 
 
@@ -220,27 +220,27 @@ The validated data was transformed into a dimensional model consisting of \*\*2 
 
 |---|---|
 
-| `Dim\_Customer` | Customer and geographic analysis |
+| `Dim_Customer` | Customer and geographic analysis |
 
-| `Dim\_Geography` | Standardized geographic information |
+| `Dim_Geography` | Standardized geographic information |
 
-| `dim\_product\_category` | Product categories and English translations |
+| `dim_product_category` | Product categories and English translations |
 
-| `Dim\_Products` | Product attributes and categories |
+| `Dim_Products` | Product attributes and categories |
 
-| `Dim\_Seller` | Seller and geographic analysis |
+| `Dim_Seller` | Seller and geographic analysis |
 
 | `DimDate` | Time-based analysis |
 
 
 
-`Fact\_Sales` contains multiple date keys representing different order lifecycle events, including purchase, approval, carrier delivery, customer delivery, estimated delivery and shipping-limit dates.
+`Fact_Sales` contains multiple date keys representing different order lifecycle events, including purchase, approval, carrier delivery, customer delivery, estimated delivery and shipping-limit dates.
 
 
 
-\### SQL Server Data Model
+### SQL Server Data Model
 
-!\[SQL Server Data Model](screenshots/sql\_server\_data\_model.png)
+![SQL Server Data Model](screenshots/sql_server_data_model.png)
 
 
 
@@ -254,13 +254,13 @@ Business-friendly SQL Server views were created on top of the dimensional model 
 
 |---|---|
 
-| `VW\_Sales\_Analysis` | Detailed sales, customer, seller, product, geography and delivery analysis |
+| `VW_Sales_Analysis` | Detailed sales, customer, seller, product, geography and delivery analysis |
 
-| `VW\_Product\_Performance` | Product-category performance, revenue, orders and delivery metrics |
+| `VW_Product_Performance` | Product-category performance, revenue, orders and delivery metrics |
 
-| `view\_Sales\_KPI` | High-level sales KPIs |
+| `view_Sales_KPI` | High-level sales KPIs |
 
-| `VW\_Product\_Sales` | Product-level sales performance by category and purchase period |
+| `VW_Product_Sales` | Product-level sales performance by category and purchase period |
 
 
 
@@ -272,83 +272,83 @@ The semantic layer provides a consistent analytical interface between the SQL Se
 
 The SQL Server semantic layer was connected to Power BI to create an interactive three-page analytical report.
 
-\### 1. Executive Summary
+### 1. Executive Summary
 
 Provides a high-level overview of business performance.
 
 
 
-\#### Key KPIs \& Analysis
+#### Key KPIs & Analysis
 
-\-	Total Revenue
+-	Total Revenue
 
-\-	Total Orders
+-	Total Orders
 
-\-	Total Customers
+-	Total Customers
 
-\-	Total Freight Cost
+-	Total Freight Cost
 
-\-	Revenue by State
+-	Revenue by State
 
-\-	Top 10 Product Categories by Revenue
-
-
-
-!\[Power BI Executive Summary](screenshots/powerbi-executive-summary.png)
+-	Top 10 Product Categories by Revenue
 
 
 
-\### 2. Product Analysis
+![Power BI Executive Summary](screenshots/powerbi-executive-summary.png)
+
+
+
+### 2. Product Analysis
 
 Focuses on product-category performance, revenue contribution, delivery performance and growth.
 
 
 
-\#### Key KPIs \& Analysis
+#### Key KPIs & Analysis
 
-\-	Top 5 Product Categories by Total Orders
+-	Top 5 Product Categories by Total Orders
 
-\-	Total Revenue by Product Category
+-	Total Revenue by Product Category
 
-\-	Average Delivery Time by Product Category
+-	Average Delivery Time by Product Category
 
-\-	Revenue and Revenue Contribution % by Product Category
+-	Revenue and Revenue Contribution % by Product Category
 
-\-	Monthly Revenue Growth %
+-	Monthly Revenue Growth %
 
-\-	Sales Year filter
+-	Sales Year filter
 
-\-	Product Category filter
-
-
-
-!\[Power BI Product Analysis](screenshots/powerbi-product-analysis.png)
+-	Product Category filter
 
 
 
-\### 3. Customer Analysis
+![Power BI Product Analysis](screenshots/powerbi-product-analysis.png)
+
+
+
+### 3. Customer Analysis
 
 Focuses on customer value, repeat purchasing behavior and payment activity.
 
 
 
-\#### Key KPIs \& Analysis
+#### Key KPIs & Analysis
 
-\-	Total Customers
+-	Total Customers
 
-\-	Repeat Customer Count
+-	Repeat Customer Count
 
-\-	Average Revenue per Customer
+-	Average Revenue per Customer
 
-\-	Top 10 Customers by Revenue
+-	Top 10 Customers by Revenue
 
-\-	Order Count by Payment Method
+-	Order Count by Payment Method
 
-\-	Sales Year filter
+-	Sales Year filter
 
 
 
-!\[Power BI Customer Analysis](screenshots/powerbi-customer-analysis.png)
+![Power BI Customer Analysis](screenshots/powerbi-customer-analysis.png)
 
 
 
@@ -362,59 +362,59 @@ This section will be updated with the quantified findings from the SQL analysis 
 
 
 
-\### 📈 Executive Summary
+### 📈 Executive Summary
 
 
 
-\- The company generated \*\*R$ 13.59M in total revenue\*\* during the sales period from \*\*September 2016 to September 2018\*\*.
+- The company generated **R$ 13.59M in total revenue** during the sales period from **September 2016 to September 2018**.
 
-\- The analysis covers approximately \*\*95K customers\*\* and \*\*99K orders\*\*.
+- The analysis covers approximately **95K customers** and **99K orders**.
 
-\- Total freight cost amounted to approximately \*\*R$ 2.25M\*\*.
+- Total freight cost amounted to approximately **R$ 2.25M**.
 
-\- Revenue showed an \*\*overall positive growth trend\*\* during the analysis period.
-
-
-
-\### 🌎 Geographic Performance
+- Revenue showed an **overall positive growth trend** during the analysis period.
 
 
 
-\- \*\*São Paulo (SP)\*\* generated the highest revenue at approximately \*\*R$ 5.2M\*\*, representing around \*\*40% of total revenue\*\*.
-
-\- \*\*São Paulo (SP), Rio de Janeiro (RJ), and Minas Gerais (MG)\*\* were the top three states by revenue generated.
+### 🌎 Geographic Performance
 
 
 
-\### 🛍️ Product Performance
+- **São Paulo (SP)** generated the highest revenue at approximately **R$ 5.2M**, representing around **40% of total revenue**.
+
+- **São Paulo (SP), Rio de Janeiro (RJ), and Minas Gerais (MG)** were the top three states by revenue generated.
 
 
 
-\- The top three product categories by revenue were \*\*`health\_beauty`\*\*, \*\*`watches\_gifts`\*\*, and \*\*`bed\_bath\_table`\*\*.
-
-\- The top three product categories by order count were \*\*`bed\_bath\_table`\*\*, \*\*`health\_beauty`\*\*, and \*\*`sports\_leisure`\*\*.
-
-\- \*\*`health\_beauty`\*\* contributed approximately \*\*9.24% of total revenue\*\*.
+### 🛍️ Product Performance
 
 
 
-\### 🚚 Delivery Performance
+- The top three product categories by revenue were **`health_beauty`**, **`watches_gifts`**, and **`bed_bath_table`**.
+
+- The top three product categories by order count were **`bed_bath_table`**, **`health_beauty`**, and **`sports_leisure`**.
+
+- **`health_beauty`** contributed approximately **9.24% of total revenue**.
 
 
 
-\- \*\*`office\_furniture`\*\*, \*\*`christmas\_supplies`\*\*, \*\*`fashion\_shoes`\*\*, and \*\*`security\_and\_services`\*\* recorded relatively longer average delivery periods.
-
-\- \*\*`arts\_and\_craftmanship`\*\* had the fastest average delivery time at approximately \*\*5.6 days\*\*.
+### 🚚 Delivery Performance
 
 
 
-\### 💳 Payment Analysis
+- **`office_furniture`**, **`christmas_supplies`**, **`fashion_shoes`**, and **`security_and_services`** recorded relatively longer average delivery periods.
+
+- **`arts_and_craftmanship`** had the fastest average delivery time at approximately **5.6 days**.
 
 
 
-\- \*\*Credit cards\*\* accounted for approximately \*\*75% of purchase payments\*\*.
+### 💳 Payment Analysis
 
-\- \*\*Boleto\*\* was the second-most-used payment method, accounting for approximately \*\*18%\*\* of purchase payments.
+
+
+- **Credit cards** accounted for approximately **75% of purchase payments**.
+
+- **Boleto** was the second-most-used payment method, accounting for approximately **18%** of purchase payments.
 
 
 
@@ -440,27 +440,27 @@ olist-ecommerce-data-analytics/
 
 ├── sql/
 
-│   ├── 01\_staging\_tables.sql
+│   ├── 01_staging_tables.sql
 
-│   ├── 02\_data\_quality\_checks.sql
+│   ├── 02_data_quality_checks.sql
 
-│   ├── 03\_dimensions.sql
+│   ├── 03_dimensions.sql
 
-│   ├── 04\_facts.sql
+│   ├── 04_facts.sql
 
-│   └── 05\_semantic\_layer\_views.sql
+│   └── 05_semantic_layer_views.sql
 
 │
 
 ├── powerbi/
 
-│   └── OLIST\_SALES\_REPORT.pbix
+│   └── OLIST_SALES_REPORT.pbix
 
 │
 
 ├── screenshots/
 
-│   ├── sql\_server\_data\_model.png
+│   ├── sql_server_data_model.png
 
 │   ├── powerbi-executive-summary.png
 
@@ -474,9 +474,9 @@ olist-ecommerce-data-analytics/
 
 └── documentation/
 
-&#x20;   ├── data\_model.md
+&#x20;   ├── data_model.md
 
-&#x20;   └── data\_quality.md
+&#x20;   └── data_quality.md
 
 **```**
 
@@ -490,39 +490,39 @@ The complete analytical workflow is:
 
 ```text
 
-1\. Load Olist CSV files into SQL Server
+1. Load Olist CSV files into SQL Server
 
 &#x20;                        ↓
 
-2\. Preserve source data in staging tables
+2. Preserve source data in staging tables
 
 &#x20;                        ↓
 
-3\. Perform data-quality checks and cleansing
+3. Perform data-quality checks and cleansing
 
 &#x20;                        ↓
 
-4\. Build dimensional model
+4. Build dimensional model
 
 &#x20;                        ↓
 
-5\. Create semantic-layer views
+5. Create semantic-layer views
 
 &#x20;                        ↓
 
-6\. Perform SQL business analysis
+6. Perform SQL business analysis
 
 &#x20;                        ↓
 
-7\. Connect SQL Server views to Power BI
+7. Connect SQL Server views to Power BI
 
 &#x20;                        ↓
 
-8\. Build interactive Power BI dashboards
+8. Build interactive Power BI dashboards
 
 &#x20;                        ↓
 
-9\. Extract business insights
+9. Extract business insights
 
 ```
 
@@ -534,21 +534,21 @@ The complete analytical workflow is:
 
 This project demonstrates an end-to-end data analytics workflow, combining:
 
-\-	Data ingestion
+-	Data ingestion
 
-\-	Data quality validation
+-	Data quality validation
 
-\-	SQL transformation
+-	SQL transformation
 
-\-	Dimensional modeling
+-	Dimensional modeling
 
-\-	Business-oriented SQL analysis
+-	Business-oriented SQL analysis
 
-\-	Semantic-layer development
+-	Semantic-layer development
 
-\-	Power BI dashboard development
+-	Power BI dashboard development
 
-\-	Business insight generation
+-	Business insight generation
 
 
 
@@ -560,13 +560,13 @@ The final solution transforms raw e-commerce data into a structured analytical m
 
 
 
-\*\*Chindu Francis\*\*  
+**Chindu Francis**  
 
 Data Analyst | SQL | Power BI | Data Analytics
 
 
 
-\[LinkedIn](https://www.linkedin.com/in/chindu-francis-45ba4380/) 
+[LinkedIn](https://www.linkedin.com/in/chindu-francis-45ba4380/) 
 
 
 
